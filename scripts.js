@@ -23,7 +23,7 @@ document.getElementById('priceForm').addEventListener('submit', async function(e
 
   try {
     // Send the data to the server
-    const response = await fetch("https://b938-125-63-79-250.ngrok-free.app/predict", {
+    const response = await fetch("https://83a7-125-63-79-250.ngrok-free.app/predict") {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
