@@ -19,16 +19,19 @@ document.getElementById('priceForm').addEventListener('submit', async function(e
     zipcode,
     location
   };
+  console.log("data is coming till here ");
 
   try {
-    const response = await fetch("https://2c80-125-63-79-250.ngrok-free.app/predict", {
- // Adjust URL if different
+    // Send the data to the server
+    const response = await fetch("https://b938-125-63-79-250.ngrok-free.app/predict", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     });
+
+
 
     if (!response.ok) {
       throw new Error('Network response was not OK');
@@ -42,5 +45,6 @@ document.getElementById('priceForm').addEventListener('submit', async function(e
   } catch (error) {
     console.error('Error:', error);
     document.getElementById('result').innerText = 'Error occurred while predicting price.';
+    document.getElementById('result').style.color = 'red';
   }
 });
