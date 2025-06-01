@@ -215,10 +215,122 @@
   </div>
 
   <!-- Bootstrap JS Bundle (Popper + Bootstrap) -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-  ></script>
-  <script src="script.js"></script>
-  <script src="scripts.js"></script>
+  <script>
+    // Location price map (ported from app.py)
+      const locationPriceMap = {
+          "banashankari": 7500,
+          "banashankari 2nd stage": 8500,
+          "banashankari 3rd stage": 7800,
+          "banjara hills": 9500,
+          "basavanagudi": 9000,
+          "bellandur": 7500,
+          "bilekahalli": 7200,
+          "brookfield": 8000,
+          "btm layout": 7800,
+          "bakersfield": 7000,
+          "church street": 12000,
+          "cv raman nagar": 7200,
+          "cunningham road": 11000,
+          "doddakannalli": 7000,
+          "electronic city": 5500,
+          "electronic city phase 1": 5800,
+          "garudachar palya": 7200,
+          "hebbal": 7600,
+          "hebbal industrial area": 7000,
+          "hebbal kempapura": 7400,
+          "hsr layout": 8500,
+          "jayanagar": 9500,
+          "jpnagar": 8000,
+          "kammanahalli": 6800,
+          "kanakapura road": 6500,
+          "kengeri": 5500,
+          "koramangala": 10000,
+          "kr puram": 6000,
+          "kumaraswamy layout": 6500,
+          "lavelle road": 12000,
+          "malleshwaram": 9500,
+          "marathahalli": 7000,
+          "murugeshpalya": 7200,
+          "neelasandra": 7500,
+          "pattandur agrahara": 7000,
+          "rajajinagar": 8800,
+          "rajiv gandhi nagar": 6200,
+          "rangaswamy layout": 6400,
+          "rajaji nagar": 8800,
+          "sarjapur road": 7800,
+          "sanjay nagar": 7600,
+          "somasundara palya": 6900,
+          "ulsoor": 8500,
+          "vrindavan layout": 6800,
+          "whitefield": 7800,
+          "whitefield east": 7500,
+          "yelahanka": 6700,
+          "yelahanka new town": 6800
+      };
+      
+      // Prediction function (ported from app.py's /predict endpoint)
+      function predictPrice(bedrooms, bathrooms, livingArea, location) {
+          try {
+              // Validate inputs
+              const parsedBedrooms = parseInt(bedrooms);
+              const parsedBathrooms = parseInt(bathrooms);
+              const parsedLivingArea = parseFloat(livingArea);
+              const parsedLocation = location.trim().toLowerCase();
+      
+              if (isNaN(parsedBedrooms) || isNaN(parsedBathrooms) || isNaN(parsedLivingArea)) {
+                  throw new Error("Invalid input: Bedrooms, bathrooms, or living area must be valid numbers");
+              }
+      
+              // Get price per square foot from locationPriceMap, default to 7000 if not found
+              const pricePerSqft = locationPriceMap[parsedLocation] || 7000;
+      
+              // Calculate base price and room adjustments
+              const basePrice = parsedLivingArea * pricePerSqft;
+              const roomAdjustment = parsedBedrooms * 150000 + parsedBathrooms * 100000;
+      
+              // Calculate and round predicted price to nearest 1000
+              let predictedPrice = basePrice + roomAdjustment;
+              predictedPrice = Math.round(predictedPrice / 1000) * 1000;
+      
+              return { predicted_price: predictedPrice };
+          } catch (error) {
+              throw new Error("Invalid input or processing error: " + error.message);
+          }
+      }
+      
+      // Form submission handler
+      document.getElementById('priceForm').addEventListener('submit', function (e) {
+          e.preventDefault(); // Prevent form from submitting the default way
+      
+          // Get form values
+          const bedrooms = document.getElementById('bedrooms').value;
+          const bathrooms = document.getElementById('bathrooms').value;
+          const livingArea = document.getElementById('living_area').value;
+          const location = document.getElementById('locationDropdown').value;
+      
+          // Prepare data object
+          const formData = {
+              bedrooms: parseInt(bedrooms),
+              bathrooms: parseInt(bathrooms),
+              living_area: parseFloat(livingArea),
+              location: location
+          };
+      
+          // Print to console (for testing)
+          console.log('Form Data:', formData);
+      
+          // Perform prediction
+          try {
+              const result = predictPrice(bedrooms, bathrooms, livingArea, location);
+              // Show result
+              document.getElementById('result').innerText = `Predicted Price: ₹${result.predicted_price}`;
+              document.getElementById('result').style.color = 'black'; // Reset color
+          } catch (error) {
+              console.error('Error:', error);
+              document.getElementById('result').innerText = 'Error in predicting the price: ' + error.message;
+              document.getElementById('result').style.color = 'red';
+          }
+      });
+  </script>
 </body>
 </html>
