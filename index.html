@@ -324,7 +324,7 @@
               const result = predictPrice(bedrooms, bathrooms, livingArea, location);
               // Show result
               document.getElementById('result').innerText = `Predicted Price: ₹${result.predicted_price}`;
-              document.getElementById('result').style.color = 'black'; // Reset color
+              document.getElementById('result').style.color = 'green'; // Reset color
           } catch (error) {
               console.error('Error:', error);
               document.getElementById('result').innerText = 'Error in predicting the price: ' + error.message;
